@@ -28,6 +28,16 @@ var from;
 // Set to true when user clicks on Bcc Me menu
 var showingMenuItems = false;
 
+function findFromAddress() {
+    var fromBox = $('select[name="from"]');
+
+    if (fromBox) {
+        return fromAddress = fromBox.find(':selected').text();
+    } else {
+        return null;
+    }
+}
+
 function findBcc() {
     if (activeStatus === 'active' && email) {
         var bccBox = $('textarea[name="bcc"]');
@@ -35,7 +45,12 @@ function findBcc() {
             var focusedElem = document.activeElement;
             // Only populate if Bcc box not already in focus (otherwise, it can become very hard to edit)
             if (focusedElem !== bccBox.get(0)) {
-                populateBccBox(bccBox, email);
+                var fromAddress = findFromAddress();
+                if (!from || fromAddress && fromAddress.indexOf(from) !== -1) {
+                    populateBccBox(bccBox, email);
+                } else {
+                    clearBccBox(bccBox, email);
+                }
             }
             focusedElem.focus();
         }
@@ -57,6 +72,16 @@ function populateBccBox(bccBox, email) {
         }
     } else {
         bccElement.value = email;
+    }
+}
+
+function clearBccBox(bccBox, email) {
+    var bccElement = bccBox.get(0);
+    if (bccElement.value) {
+        if (bccElement.value.indexOf(email) !== -1) {
+            bccElement.value = bccElement.value.replace(email, "").
+                replace(/^,?\s*/, "");
+        }
     }
 }
 
