@@ -23,6 +23,7 @@ var INIT_TIMEOUTS = [0.25, 0.25, 0.5, 1, 1, 2, 3, 5];
 var activeStatus;
 var displayMenu = 'false';  // Start with 'false' so that on page load, menu will be displayed if displayMenu is actually 'true'
 var email;
+var from;
 
 // Set to true when user clicks on Bcc Me menu
 var showingMenuItems = false;
@@ -91,6 +92,14 @@ function getEmailMenuItemText() {
     }
 }
 
+function getFromMenuItemText() {
+    if (from) {
+        return 'From <strong>' + htmlEncode(from) + '</strong> <em>(click to change)</em>';
+    } else {
+        return 'From: <strong>Not set</strong> <em>(click to set)</em>';
+    }
+}
+
 function toggleMenuItems(e) {
     showingMenuItems = !showingMenuItems;
     if (showingMenuItems) {
@@ -100,6 +109,7 @@ function toggleMenuItems(e) {
                 <ol id="abcc_menuDropdownList">	\
                     <li><a class="abcc_menuItem" id="item_activeInactive">' + getActiveStatusMenuItemText() + '</a></li>	\
                     <li><a class="abcc_menuItem" id="item_email">' + getEmailMenuItemText() + '</a></li>	\
+                    <li><a class="abcc_menuItem" id="item_from">' + getFromMenuItemText() + '</a></li> \
                     <li><a class="abcc_menuItem" id="item_options">Options</a></li>	\
                     <li><a class="abcc_menuItem" id="item_hideMenu">Hide This Menu</a></li>	\
                 </ol>	\
@@ -107,6 +117,7 @@ function toggleMenuItems(e) {
         $('#abcc_menuTriangle').addClass('on');
         $('#item_activeInactive').click(toggleActiveStatus);
         $('#item_email').click(openOptionsPage);
+        $('#item_from').click(openOptionsPage);
         $('#item_options').click(openOptionsPage);
         $('#item_hideMenu').click(setDisplayMenuOff);
     } else {
@@ -186,7 +197,12 @@ function handleUpdatedOption(option, value) {
         //console.log('Bcc Me: Set email to "' + value + '" in content script');
         email = value;
         $('#item_email').html(getEmailMenuItemText());
-        // email setting will affect what active status gets displayed 
+        // email setting will affect what active status gets displayed
+        $('#item_activeInactive').html(getActiveStatusMenuItemText());
+        break;
+    case 'from':
+        from = value;
+        $('#item_from').html(getFromMenuItemText());
         $('#item_activeInactive').html(getActiveStatusMenuItemText());
         break;
     }
