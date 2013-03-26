@@ -22,7 +22,8 @@ var options = {
     defaults: {
         activeStatus: 'active',	// possible values: 'active', 'inactive'
         displayMenu: 'true',	// possible values: 'true', 'false'
-        email: ''
+        email: '',
+        from: ''
     },
 
     isValid: function(option, value) {
@@ -34,6 +35,9 @@ var options = {
             return (value === 'true' || value === 'false');
             break;
         case 'email':
+            return (typeof(value) === 'string');
+            break;
+        case 'from':
             return (typeof(value) === 'string');
             break;
         default:
@@ -68,7 +72,8 @@ var options = {
             callback({
                 activeStatus: items.activeStatus,
                 displayMenu: items.displayMenu,
-                email: items.email
+                email: items.email,
+                from: items.from
             });
         });
     },
@@ -105,7 +110,7 @@ var options = {
 var version = {
     // Other people seem to use chrome.app.getDetails().version, but that isn't currently a supported public
     // API.  Once there's something supported, we can stop putting the current version in multiple places.
-    current: "0.1.2",
+    current: "0.1.3",
 
     check: function() {
         // Check if the version has changed.

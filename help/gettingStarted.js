@@ -22,7 +22,8 @@ document.body.onload = function() {
     // Save button: save options and close window
     document.getElementById('saveButton').onclick = function() {
         chrome.extension.sendMessage({command: 'setOptions', options: {
-            email: document.getElementById('email').value
+            email: document.getElementById('email').value,
+            from: document.getElementById('from').value
         }}, onSaved);
     };
 

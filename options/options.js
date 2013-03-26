@@ -24,7 +24,8 @@ document.body.onload = function() {
         chrome.extension.sendMessage({command: 'setOptions', options: {
             activeStatus: (document.getElementById('activeStatus_active').checked ? 'active' : 'inactive'),
             displayMenu: (document.getElementById('displayMenu').checked ? 'true' : 'false'),
-            email: document.getElementById('email').value
+            email: document.getElementById('email').value,
+            from: document.getElementById('from').value
         }});
         window.close();
     };
@@ -49,6 +50,7 @@ function loadOptions(response) {
     }
     document.getElementById('displayMenu').checked = (response.options['displayMenu'] === 'true');
     document.getElementById('email').value = response.options['email'];
+    document.getElementById('from').value = response.options['from'];
 
     document.getElementById('email').focus();
 }
