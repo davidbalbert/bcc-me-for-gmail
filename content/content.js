@@ -29,10 +29,14 @@ var from;
 var showingMenuItems = false;
 
 function findFromAddress() {
-    var fromBox = $('select[name="from"]');
+    var fromAddress = $('select[name="from"]').find(':selected').text();
 
-    if (fromBox) {
-        return fromAddress = fromBox.find(':selected').text();
+    if (fromAddress === "") {
+        fromAddress = $('input[name="from"]').attr("value");
+    }
+
+    if (fromAddress !== "") {
+        return fromAddress;
     } else {
         return null;
     }
