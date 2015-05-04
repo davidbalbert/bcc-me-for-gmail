@@ -28,11 +28,29 @@ var from;
 // Set to true when user clicks on Bcc Me menu
 var showingMenuItems = false;
 
-function findFromAddress() {
-    var fromAddress = $('select[name="from"]').find(':selected').text();
+// Extracts "foo@example.com" from "Foo Bar Baz <foo@example.com>" Returns the
+// entire string if it can't find angle brackets.
+function extractAddrSpec(emailAddr) {
+    if (md = emailAddr.match(/<(.*?)>/)) {
+        return md[1];
+    } else {
+        return emailAddr;
+    }
+}
 
-    if (fromAddress === "") {
-        fromAddress = $('input[name="from"]').attr("value");
+function findFromAddress(googleInbox) {
+    var fromAddress = "";
+
+    if (googleInbox) {
+        fromAddress = $('div:contains(From)').next('span').text();
+        fromAddress = extractAddrSpec(fromAddress);
+    } else {
+        var id = $('label:contains(From)').attr('for');
+
+        // use document.getElementById because Gmail's ids start with a colon
+        // and jQuery seems not to like that.
+        fromAddress = $(document.getElementById(id)).find('span').text();
+        fromAddress = extractAddrSpec(fromAddress);
     }
 
     if (fromAddress !== "") {
@@ -44,12 +62,19 @@ function findFromAddress() {
 
 function findBcc() {
     if (activeStatus === 'active' && email) {
-        var bccBox = $('textarea[name="bcc"]');
+        var bccBox = $('textarea[name="bcc"]'); // Gmail
+        var inbox = false; // True if we're on inbox.google.com
+
+        if (bccBox.length === 0) {
+          bccBox = $('label:contains(Bcc)').next('div').find('input'); // Inbox
+          inbox = true;
+        }
+
         if (bccBox.length > 0) {
             var focusedElem = document.activeElement;
             // Only populate if Bcc box not already in focus (otherwise, it can become very hard to edit)
             if (focusedElem !== bccBox.get(0)) {
-                var fromAddress = findFromAddress();
+                var fromAddress = findFromAddress(inbox);
                 if (!from || fromAddress && fromAddress.indexOf(from) !== -1) {
                     populateBccBox(bccBox, email);
                 } else {
