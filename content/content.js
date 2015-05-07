@@ -90,7 +90,6 @@ function findBcc() {
 function populateBccBox(bccBox, email) {
     // If Bcc box is not visible, then simulate click to make it so
     if (!bccBox.is(':visible')) {
-        $('span:contains("Bcc")').click(); // Gmail
         $('button[title="Show Cc/Bcc"]').click(); // Inbox
     }
 
